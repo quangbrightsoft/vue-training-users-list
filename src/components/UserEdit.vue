@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Create/Edit User</h1>
-    <v-snackbar v-model="message" :multi-line="multiLine">
+    <v-snackbar :value="!!message" :multi-line="multiLine">
       {{ message }}
       <v-btn color="red" text @click="message = null">
         Close
