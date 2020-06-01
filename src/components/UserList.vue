@@ -22,7 +22,9 @@
     >
     <template v-slot:top>
       <v-row class="pa-md-4 mx-lg-auto">
+        <v-col cols="12" sm="6" md="3">
         <v-btn href="#/user/edit/0">Create new +</v-btn>
+        </v-col>
         <v-col cols="12" sm="6" md="3">
           <v-text-field
             class="float-right"
@@ -35,7 +37,6 @@
           <v-select
             v-model="selectedRoles"
             :items="roleItems"
-            attach
             chips
             label="Filter"
             multiple
