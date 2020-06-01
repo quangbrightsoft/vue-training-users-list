@@ -15,7 +15,11 @@
     <template v-slot:item.email="{ item }">
       <router-link :to="'/user/edit/' + item.id">{{ item.email }}</router-link>
     </template>
-    <template v-slot:item.actions="{ item }">{{ item.id }}</template>
+    <template v-slot:item.actions="{ item }"
+      ><v-btn icon color="primary" @click="deleteItem(item.id)">
+        <v-icon>mdi-trash-can-outline</v-icon></v-btn
+      ></template
+    >
     <template v-slot:top>
       <v-row class="pa-md-4 mx-lg-auto">
         <v-btn href="#/user/edit/0">Create new +</v-btn>
@@ -85,6 +89,24 @@ export default Vue.extend({
     this.getUsers();
   },
   methods: {
+    deleteItem(id) {
+      let deleteUserUrl = `https://localhost:5001/api/user/delete`;
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyNGE1NzY5Mi00MDA5LTQ2NDYtODRkOS0yZDMzMWI4MTgwYmUiLCJzdWIiOiJkZXZlbG9wZXIuYnJpZ2h0c29mdEBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTYyMTYwNTQ2MSwiaXNzIjoiQnJpZ2h0c29mdC5FSGVhcnRCb29raW5nIiwiYXVkIjoiQnJpZ2h0c29mdC5FSGVhcnRCb29raW5nIn0.9ix0zQ2lks9zcHvXHHgJGFtNz91FCO7ZXFBzZtr30Fw",
+      };
+      this.isLoading = true;
+      axios
+        .delete(deleteUserUrl, {
+          headers: headers,
+          params: { id: id },
+        })
+        .then(() => {
+          this.getUsers()
+          this.isLoading = false;
+        });
+    },
     getUsers() {
       let userListUrl = `https://localhost:5001/api/user/list`;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
