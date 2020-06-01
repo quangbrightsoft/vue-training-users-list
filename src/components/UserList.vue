@@ -21,7 +21,7 @@
       ></template
     >
     <template v-slot:top>
-      <v-row class="pa-md-4 mx-lg-auto">
+      <v-row class="pa-md-4 mx-lg-auto"  align="center">
         <v-col cols="12" sm="6" md="3">
         <v-btn href="#/user/edit/0">Create new +</v-btn>
         </v-col>
