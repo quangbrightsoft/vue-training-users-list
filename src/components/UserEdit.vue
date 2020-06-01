@@ -1,7 +1,12 @@
 <template>
   <div>
     <h1>Create/Edit User</h1>
-    <p>{{ message }}</p>
+    <v-snackbar v-model="message" :multi-line="multiLine">
+      {{ message }}
+      <v-btn color="red" text @click="message = null">
+        Close
+      </v-btn>
+    </v-snackbar>
     <form id="demo">
       <v-text-field
         :rules="[rules.required, rules.email]"
@@ -27,6 +32,56 @@
         />
         <label :for="role.name + 'checkbox'">{{ role.name }}</label>
       </div>
+      <v-text-field
+        v-if="currentUser.roles.includes('Patient')"
+        v-model="currentUser.ssn"
+        label="ssn"
+      ></v-text-field>
+      <v-text-field
+        v-if="currentUser.roles.includes('Patient')"
+        v-model="currentUser.medicalNote"
+        label="medicalNote"
+      ></v-text-field>
+      <div v-if="currentUser.roles.includes('Doctor')">
+        <p>Skills</p>
+
+        <div :key="skill.name" v-for="skill in skillOptions">
+          <input
+            type="checkbox"
+            :id="skill.name + 'checkbox'"
+            :value="skill.value"
+            v-model="currentUser.skills"
+          />
+          <label :for="skill.name + 'checkbox'">{{ skill.name }}</label>
+        </div>
+        <v-menu
+          ref="menu"
+          v-model="menu2"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          :return-value.sync="time"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              v-model="currentUser.startTime"
+              label="start time"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            v-if="menu2"
+            v-model="currentUser.startTime"
+            full-width
+            @click:minute="$refs.menu.save(time)"
+          ></v-time-picker>
+        </v-menu>
+      </div>
+
       <v-btn color="primary" @click="save()">Save</v-btn>
       <v-btn color="grey" @click="back()">Cancel</v-btn>
     </form>
@@ -42,7 +97,9 @@ export default Vue.extend({
 
   data() {
     return {
+        menu2: false,
       message: "",
+      multiLine: true,
       isLoading: false,
       userList: { items: [] },
       singleSelect: false,
@@ -53,6 +110,13 @@ export default Vue.extend({
         { name: "Patient", value: "Patient", checked: false },
         { name: "Doctor", value: "Doctor", checked: false },
         { name: "BMA", value: "BmaSkill", checked: false },
+      ],
+      skillOptions: [
+        { name: "EB", value: "EB", checked: false },
+        { name: "ES", value: "ES", checked: false },
+        { name: "BP", value: "BP", checked: false },
+        { name: "HO", value: "HO", checked: false },
+        { name: "SP", value: "SP", checked: false },
       ],
       currentUser: {
         createdAt: null,
@@ -171,7 +235,7 @@ export default Vue.extend({
           this.back();
         })
         .catch((err) => {
-          this.message = err;
+          this.message = err.response.data;
         });
     },
   },
