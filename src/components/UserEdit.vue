@@ -204,6 +204,9 @@ export default Vue.extend({
         })
         .then((response) => {
           this.currentUser = response.data;
+          if (!this.currentUser.skills) {
+            this.currentUser.skills = [];
+          }
         });
     },
     save() {
