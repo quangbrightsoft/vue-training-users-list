@@ -56,28 +56,42 @@
         </div>
         <v-menu
           ref="menu"
-          v-model="menu2"
+          v-model="startTimePicker"
           :close-on-content-click="false"
           :nudge-right="40"
-          :return-value.sync="time"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
         >
           <template v-slot:activator="{ on }">
             <v-text-field
-              v-model="currentUser.startTime"
+              v-model="currentUser.workTime.startTime"
               label="start time"
               readonly
               v-on="on"
             ></v-text-field>
           </template>
           <v-time-picker
-            v-if="menu2"
-            v-model="currentUser.startTime"
+            v-if="startTimePicker"
+            v-model="currentUser.workTime.startTime"
             full-width
-            @click:minute="$refs.menu.save(time)"
+          ></v-time-picker>
+        </v-menu>
+         <v-menu
+          ref="menu"
+          v-model="endTimePicker"
+          :close-on-content-click="false"
+          :nudge-right="40"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              v-model="currentUser.workTime.endTime"
+              label="start time"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            v-if="endTimePicker"
+            v-model="currentUser.workTime.endTime"
+            full-width
           ></v-time-picker>
         </v-menu>
       </div>
@@ -97,7 +111,8 @@ export default Vue.extend({
 
   data() {
     return {
-        menu2: false,
+      startTimePicker: false,
+      endTimePicker: false,
       message: "",
       multiLine: true,
       isLoading: false,
